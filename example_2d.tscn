@@ -1,0 +1,59 @@
+[gd_scene load_steps=11 format=3 uid="uid://g1n1admhx3v0"]
+
+[ext_resource type="Script" uid="uid://g882wars6wys" path="res://example_2d.gd" id="1_script"]
+[ext_resource type="Shader" uid="uid://lcw3gwxd8bqx" path="res://shaders/trail_draw_pass_2d.gdshader" id="2_dcliv"]
+[ext_resource type="Script" uid="uid://v2ee755q4d0y" path="res://GPUTrail2D.gd" id="2_trail"]
+[ext_resource type="Shader" uid="uid://bpibsypjbpxid" path="res://shaders/trail_2d.gdshader" id="3_bt6gd"]
+
+[sub_resource type="Curve" id="Curve_dcliv"]
+bake_resolution = 16
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_bt6gd"]
+curve = SubResource("Curve_dcliv")
+
+[sub_resource type="Gradient" id="Gradient_e81xh"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_sit26"]
+gradient = SubResource("Gradient_e81xh")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nr3pl"]
+resource_local_to_scene = true
+shader = ExtResource("2_dcliv")
+shader_parameter/tex = SubResource("GradientTexture1D_sit26")
+shader_parameter/curve = SubResource("CurveTexture_bt6gd")
+shader_parameter/canvas_transform = Projection(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -324, -212, 0, 1)
+shader_parameter/uv_offset = Vector2(0, 0)
+shader_parameter/flags = 0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jau0x"]
+resource_local_to_scene = true
+shader = ExtResource("3_bt6gd")
+shader_parameter/emission_transform = Projection(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 324, 212, 0, 1)
+shader_parameter/width = 40.0
+shader_parameter/move_direction = Vector2(0.9994619, 0.032801475)
+
+[node name="Example2D" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="GPUTrail2D" type="GPUParticles2D" parent="."]
+material = SubResource("ShaderMaterial_nr3pl")
+position = Vector2(324, 212)
+amount = 1000
+texture = SubResource("GradientTexture1D_sit26")
+lifetime = 1000.0
+explosiveness = 1.0
+fixed_fps = 165
+visibility_rect = Rect2(-10000, -10000, 20000, 20000)
+process_material = SubResource("ShaderMaterial_jau0x")
+script = ExtResource("2_trail")
+length = 1000
+length_seconds = 6.0606060606060606
+width = 40.0
+trail_texture = SubResource("GradientTexture1D_sit26")
+curve = SubResource("CurveTexture_bt6gd")
+dewiggle = false
+clip_overlaps = false
+_defaults_have_been_set = true
